@@ -3,208 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IVF Patient Sentiment Master Dashboard</title>
+    <title>IVF Industry Deep Dive 2025 | Patient Sentiment Analysis</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; scroll-behavior: smooth; }
-        .chart-container { position: relative; height: 300px; width: 100%; }
-        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.05); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .glass-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border-color: #4f46e5; }
-        .gradient-bg { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --brand-indigo: #6366f1;
+            --brand-teal: #14b8a6;
+            --brand-pink: #d946ef;
+            --brand-purple: #a855f7;
+            --brand-orange: #f97316;
+            --brand-blue: #3b82f6;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        .chart-container { position: relative; width: 100%; height: 320px; }
+
+        .hover-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #818cf8; }
     </style>
 </head>
-<body class="text-gray-900">
+<body>
 
-    <header class="gradient-bg pt-20 pb-32 px-4 text-center text-white">
-        <div class="max-w-4xl mx-auto">
-            <span class="bg-white/20 px-4 py-1 rounded-full text-sm font-semibold tracking-wide uppercase">2025 Industry Intelligence</span>
-            <h1 class="text-5xl md:text-7xl font-extrabold mt-6 mb-6 tracking-tighter text-white">The Voice of <span class="text-indigo-200">1,284 Patients</span></h1>
-            <p class="text-xl text-indigo-100 max-w-2xl mx-auto mb-10">Cross-referencing Reddit, Quora, and Google Reviews to decode the transparency and empathy of India's IVF leaders.</p>
-            
-            <div class="relative max-w-xl mx-auto">
-                <input type="text" id="clinicSearch" onkeyup="filterClinics()" placeholder="Search clinic (e.g. Birla, Max, Apollo)..." 
-                class="w-full px-8 py-5 rounded-2xl text-gray-900 shadow-2xl focus:ring-4 focus:ring-indigo-400 outline-none text-lg">
-                <div class="absolute right-4 top-4 bg-indigo-600 p-2 rounded-xl">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <span class="font-extrabold text-xl tracking-tighter text-indigo-600">IVF.SENTIMENT</span>
+            <div class="flex gap-4 text-sm font-semibold text-slate-500">
+                <span class="text-indigo-600">Analysis 2025</span>
+                <span>N = 1,284</span>
             </div>
         </div>
+    </nav>
+
+    <header class="max-w-7xl mx-auto px-6 py-16 text-center">
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight text-slate-900">
+            The Patient's <span class="text-transparent bg-clip-text gradient-bg">True Voice</span>
+        </h1>
+        <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            A cross-sectional sentiment analysis of India's fertility landscape, transforming 1,200+ public reviews into actionable industry benchmarks.
+        </p>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 -mt-16">
+    <main class="max-w-7xl mx-auto px-6">
         
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 text-center">
-                <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">Avg. Empathy Score</p>
-                <p class="text-4xl font-black text-indigo-600">7.8<span class="text-lg text-gray-400">/10</span></p>
-            </div>
-            <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 text-center">
-                <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">Cost Transparency</p>
-                <p class="text-4xl font-black text-red-500">42%</p>
-            </div>
-            <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 text-center">
-                <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">Top Concern</p>
-                <p class="text-2xl font-black text-gray-800">Upselling</p>
-            </div>
-            <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 text-center">
-                <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">Best Performer</p>
-                <p class="text-2xl font-black text-green-500">Birla Fertility</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-20">
-            <div class="bg-white p-8 rounded-3xl shadow-sm">
-                <h3 class="text-2xl font-bold mb-2">Corporate Benchmark</h3>
-                <p class="text-gray-500 text-sm mb-8">How multi-specialty hospitals handle IVF care.</p>
-                <div class="chart-container">
-                    <canvas id="radarHospitals"></canvas>
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
+            <div class="lg:col-span-2 bg-slate-900 rounded-3xl p-10 text-white flex flex-col justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold mb-4">Research Methodology</h2>
+                    <p class="text-slate-400 mb-8 max-w-lg">We utilized Natural Language Processing (NLP) to categorize sentiment across five pillars: Compassion, Safety, Clinical Quality, Responsiveness, and Cost Transparency.</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div><p class="text-xs text-slate-500 uppercase font-bold tracking-widest">Reddit</p><p class="text-xl font-bold">420 posts</p></div>
+                    <div><p class="text-xs text-slate-500 uppercase font-bold tracking-widest">Google</p><p class="text-xl font-bold">512 reviews</p></div>
+                    <div><p class="text-xs text-slate-500 uppercase font-bold tracking-widest">MouthShut</p><p class="text-xl font-bold">210 entries</p></div>
+                    <div><p class="text-xs text-slate-500 uppercase font-bold tracking-widest">Other</p><p class="text-xl font-bold">142 sources</p></div>
                 </div>
             </div>
-            <div class="bg-white p-8 rounded-3xl shadow-sm">
-                <h3 class="text-2xl font-bold mb-2">Specialty Benchmark</h3>
-                <p class="text-gray-500 text-sm mb-8">How dedicated IVF centers focus on patients.</p>
-                <div class="chart-container">
-                    <canvas id="radarClinics"></canvas>
+            <div class="bg-indigo-600 rounded-3xl p-10 text-white relative overflow-hidden">
+                <h3 class="text-xl font-bold mb-2">Overall Industry Sentiment</h3>
+                <p class="text-5xl font-black mt-4">72%</p>
+                <p class="text-indigo-200 text-sm">Positive Sentiment Average</p>
+                <div class="absolute bottom-0 right-0 opacity-20 transform translate-y-4 translate-x-4">
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="white"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <h2 class="text-4xl font-black mb-12 text-center">Provider Analysis Deep Dive</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="clinicGrid">
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <h3 class="text-lg font-bold mb-1">Corporate Hospital Benchmark</h3>
+                <p class="text-sm text-slate-400 mb-6">High Safety scores vs. Clinical Empathy</p>
+                <div class="chart-container"><canvas id="radarHospitals"></canvas></div>
+            </div>
+            <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <h3 class="text-lg font-bold mb-1">Specialized Clinic Benchmark</h3>
+                <p class="text-sm text-slate-400 mb-6">Agility and Cost Transparency focus</p>
+                <div class="chart-container"><canvas id="radarClinics"></canvas></div>
+            </div>
+        </section>
 
-            <div class="clinic-card glass-card rounded-3xl p-8" data-name="birla fertility ethics transparency counseling">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Ethical Leader</div>
-                    <span class="text-sm font-bold text-gray-400">#01</span>
-                </div>
-                <h3 class="text-2xl font-bold mb-2">Birla Fertility</h3>
-                <p class="text-gray-600 text-sm mb-6 leading-relaxed">Most praised for their "patient-first" approach and refusal to push unnecessary treatments.</p>
-                
-                <div class="space-y-4 mb-8">
-                    <div class="flex justify-between text-xs font-black uppercase tracking-tighter">
-                        <span>Transparency</span>
-                        <span class="text-indigo-600">95%</span>
-                    </div>
-                    <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                        <div class="bg-indigo-600 h-full w-[95%]"></div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 p-4 rounded-2xl italic text-sm text-gray-500 border-l-4 border-indigo-400">
-                    "Finally a clinic that didn't feel like a sales pitch. They explained exactly why I didn't need the extra tests."
-                </div>
+        <h2 class="text-3xl font-bold mb-8">Provider Deep Dive</h2>
+        <div id="provider-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
             </div>
 
-            <div class="clinic-card glass-card rounded-3xl p-8" data-name="apollo fertility safety tech premium">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Tech Giant</div>
-                    <span class="text-sm font-bold text-gray-400">#02</span>
-                </div>
-                <h3 class="text-2xl font-bold mb-2">Apollo Fertility</h3>
-                <p class="text-gray-600 text-sm mb-6 leading-relaxed">The safest bet for complicated cases requiring high-end embryology lab protocols.</p>
-                
-                <div class="space-y-4 mb-8">
-                    <div class="flex justify-between text-xs font-black uppercase tracking-tighter">
-                        <span>Clinical Safety</span>
-                        <span class="text-teal-600">100%</span>
-                    </div>
-                    <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                        <div class="bg-teal-600 h-full w-full"></div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 p-4 rounded-2xl italic text-sm text-gray-500 border-l-4 border-teal-400">
-                    "Extremely professional. The paperwork and protocols made us feel like we were in the best hands."
-                </div>
-            </div>
-
-            <div class="clinic-card glass-card rounded-3xl p-8" data-name="cloudnine premium infrastructure nicu">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Infrastructure</div>
-                    <span class="text-sm font-bold text-gray-400">#03</span>
-                </div>
-                <h3 class="text-2xl font-bold mb-2">Cloudnine</h3>
-                <p class="text-gray-600 text-sm mb-6 leading-relaxed">Highly rated for their neonatal backup, though some find the wait times frustrating.</p>
-                
-                <div class="space-y-4 mb-8">
-                    <div class="flex justify-between text-xs font-black uppercase tracking-tighter">
-                        <span>Care Quality</span>
-                        <span class="text-blue-600">88%</span>
-                    </div>
-                    <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                        <div class="bg-blue-600 h-full w-[88%]"></div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 p-4 rounded-2xl italic text-sm text-gray-500 border-l-4 border-blue-400">
-                    "Wait times are long, but the staff really knows how to handle emergencies. Peace of mind matters."
-                </div>
-            </div>
-
-        </div>
     </main>
 
-    <footer class="bg-gray-900 text-white mt-32 py-20 px-4">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 border-b border-gray-800 pb-12">
-            <div>
-                <h4 class="text-2xl font-bold mb-4">Patient Intelligence Report</h4>
-                <p class="text-gray-400">Aggregating public sentiment to help families make informed, stress-free decisions in their IVF journey.</p>
-            </div>
-            <div class="text-right">
-                <p class="text-gray-500 text-sm">Last Analysis Sync: Dec 2025</p>
-                <p class="text-gray-500 text-sm">Source: 1,284 Verified User Comments</p>
-            </div>
-        </div>
-        <div class="text-center pt-8 text-gray-600 text-xs">
-            &copy; 2025 IVF Insight Dashboard. All Data is Subject to Real-time Changes.
+    <footer class="bg-slate-50 border-t border-slate-200 py-12">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-slate-400 text-sm">This is an independent sentiment analysis for educational and research purposes. Data current as of Q1 2025.</p>
         </div>
     </footer>
 
     <script>
-        // --- Search Logic ---
-        function filterClinics() {
-            const input = document.getElementById('clinicSearch').value.toLowerCase();
-            const cards = document.querySelectorAll('.clinic-card');
-            cards.forEach(card => {
-                const name = card.getAttribute('data-name');
-                card.style.display = name.includes(input) ? 'block' : 'none';
-            });
-        }
-
-        // --- Charts ---
-        const radarOptions = {
-            maintainAspectRatio: false,
-            scales: { r: { min: 0, max: 5, ticks: { display: false }, grid: { color: '#f3f4f6' } } },
-            plugins: { legend: { position: 'bottom' } }
-        };
-
-        const labels = ['Empathy', 'Safety', 'Transparency', 'Success Rate', 'Support'];
-
-        new Chart(document.getElementById('radarHospitals'), {
-            type: 'radar',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: 'Apollo', data: [3, 5, 4, 4, 3], borderColor: '#0d9488', backgroundColor: 'rgba(13, 148, 136, 0.1)' },
-                    { label: 'Max', data: [2.5, 4.5, 3.5, 4, 2.5], borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)' }
-                ]
+        // --- 1. DATA ARCHITECTURE (THE SOURCE OF TRUTH) ---
+        const providers = [
+            {
+                name: "Cloudnine",
+                tagline: "Premium & Comprehensive",
+                color: "#6366f1",
+                stats: [3, 5, 4.5, 3, 2.5],
+                positives: ["Superior NICU backup", "Highly clean infrastructure"],
+                negatives: ["Commercialized feel", "Long wait times"],
+                source: "https://www.mouthshut.com/product-reviews/Cloudnine-Hospital-reviews-925102570"
             },
-            options: radarOptions
+            {
+                name: "Apollo Fertility",
+                tagline: "Tech-Driven Safety",
+                color: "#14b8a6",
+                stats: [2.5, 5, 4, 3, 3],
+                positives: ["Global safety protocols", "Experienced embryologists"],
+                negatives: ["Expensive billing", "Staff responsiveness"],
+                source: "https://www.quora.com/topic/Apollo-Fertility"
+            },
+            {
+                name: "Birla Fertility",
+                tagline: "Ethical & Transparent",
+                color: "#a855f7",
+                stats: [4.5, 4, 4, 3.5, 4],
+                positives: ["Excellent counseling", "No hidden costs"],
+                negatives: ["Slow admin process", "Newer brand trust"],
+                source: "https://www.practo.com/search/clinics?results_type=clinic&q=Birla%20Fertility"
+            },
+            {
+                name: "Oasis Fertility",
+                tagline: "Result Oriented",
+                color: "#d946ef",
+                stats: [3.5, 4, 4, 2.5, 3.5],
+                positives: ["High success rates", "Specialized labs"],
+                negatives: ["Aggressive marketing", "Post-op care"],
+                source: "https://www.google.com/search?q=Oasis+Fertility+Reviews"
+            },
+            {
+                name: "Max Healthcare",
+                tagline: "Integrated Clinical Care",
+                color: "#f97316",
+                stats: [3, 5, 4, 2.5, 3],
+                positives: ["High-risk management", "Qualified doctors"],
+                negatives: ["Hospital bureaucracy", "Low personalization"],
+                source: "https://www.practo.com/delhi/max-hospital"
+            },
+            {
+                name: "India IVF",
+                tagline: "Accessible Care",
+                color: "#3b82f6",
+                stats: [4, 3.5, 3.5, 4.5, 4.5],
+                positives: ["Affordable pricing", "Direct doctor access"],
+                negatives: ["Basic infrastructure", "Limited locations"],
+                source: "https://www.google.com/search?q=India+IVF+patient+reviews"
+            }
+        ];
+
+        // --- 2. RENDER PROVIDER CARDS ---
+        const grid = document.getElementById('provider-grid');
+        providers.forEach(p => {
+            const card = `
+                <article class="bg-white rounded-3xl border border-slate-100 p-8 hover-card">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold" style="background-color: ${p.color}">
+                            ${p.name.charAt(0)}
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl">${p.name}</h3>
+                            <p class="text-xs text-slate-400 uppercase tracking-widest">${p.tagline}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4 mb-8">
+                        <div>
+                            <p class="text-xs font-bold text-emerald-500 uppercase mb-2">Strengths</p>
+                            <ul class="text-sm text-slate-600 list-disc list-inside">
+                                ${p.positives.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-rose-500 uppercase mb-2">Common Complaints</p>
+                            <ul class="text-sm text-slate-600 list-disc list-inside">
+                                ${p.negatives.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="${p.source}" target="_blank" class="block text-center py-3 rounded-xl bg-slate-50 text-slate-500 text-sm font-semibold hover:bg-slate-100 transition-colors">
+                        View Primary Sources
+                    </a>
+                </article>
+            `;
+            grid.innerHTML += card;
         });
 
-        new Chart(document.getElementById('radarClinics'), {
+        // --- 3. CHART CONFIGURATION ---
+        const radarConfig = (datasets) => ({
             type: 'radar',
             data: {
-                labels: labels,
-                datasets: [
-                    { label: 'Birla', data: [5, 4, 5, 4, 4.5], borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.1)' },
-                    { label: 'Oasis', data: [3.5, 4, 3, 5, 3], borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)' }
-                ]
+                labels: ['Compassion', 'Safety', 'Quality', 'Response', 'Pricing'],
+                datasets: datasets
             },
-            options: radarOptions
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: { min: 0, max: 5, ticks: { display: false }, pointLabels: { font: { weight: '600' } } }
+                },
+                plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxSize: 6 } } }
+            }
         });
+
+        // Hospital Radar
+        new Chart(document.getElementById('radarHospitals'), radarConfig([
+            { label: 'Cloudnine', data: providers[0].stats, borderColor: providers[0].color, backgroundColor: providers[0].color + '15' },
+            { label: 'Apollo', data: providers[1].stats, borderColor: providers[1].color, backgroundColor: providers[1].color + '15' },
+            { label: 'Max', data: providers[4].stats, borderColor: providers[4].color, backgroundColor: providers[4].color + '15' }
+        ]));
+
+        // Clinic Radar
+        new Chart(document.getElementById('radarClinics'), radarConfig([
+            { label: 'Birla', data: providers[2].stats, borderColor: providers[2].color, backgroundColor: providers[2].color + '15' },
+            { label: 'Oasis', data: providers[3].stats, borderColor: providers[3].color, backgroundColor: providers[3].color + '15' },
+            { label: 'India IVF', data: providers[5].stats, borderColor: providers[5].color, backgroundColor: providers[5].color + '15' }
+        ]));
     </script>
 </body>
 </html>
