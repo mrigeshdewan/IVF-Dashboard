@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVF Industry Deep Dive: The Patient's Voice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1f2937;
+            scroll-behavior: smooth;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 380px;
+        }
+
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-shadow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+        }
+
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%);
+        }
+
+        /* PDF/Print Optimization */
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: white !important; }
+            .card-shadow { box-shadow: none !important; border: 1px solid #e5e7eb !important; }
+            .max-w-7xl { max-width: 100% !important; padding: 0 !important; }
+            .chart-container { height: 300px !important; page-break-inside: avoid; }
+            section { page-break-inside: avoid; margin-bottom: 2rem !important; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <header class="flex flex-col md:flex-row justify-between items-center mb-16 gap-6">
+            <div class="text-center md:text-left">
+                <h1 class="text-5xl font-extrabold mb-4 tracking-tight text-gray-900">
+                    IVF Industry <span class="gradient-text">Sentiment Analysis</span>
+                </h1>
+                <p class="text-xl text-gray-600 max-w-2xl">
+                    A comprehensive multi-dimensional analysis of patient experiences across India's premier fertility chains.
+                </p>
+            </div>
+            <button onclick="window.print()" class="no-print flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-full font-semibold hover:bg-indigo-600 transition-colors shadow-lg active:scale-95">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download Report (PDF)
+            </button>
+        </header>
+
+        <section class="mb-16">
+            <div class="bg-white rounded-3xl p-8 card-shadow border border-gray-100 flex flex-col md:flex-row gap-8 items-center justify-between">
+                <div class="flex-1 border-l-4 border-indigo-600 pl-6">
+                    <h2 class="text-sm font-bold text-indigo-600 uppercase tracking-widest mb-1">Research Methodology</h2>
+                    <p class="text-gray-600 leading-relaxed">Cross-platform sentiment extraction from <strong>1,620</strong> unique data points across 7 critical patient-centric dimensions.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 w-full md:w-auto">
+                    <div class="bg-indigo-50 p-4 rounded-2xl text-center">
+                        <span class="block text-2xl font-bold text-indigo-700">1,620</span>
+                        <span class="text-xs text-indigo-600 font-semibold uppercase">Data Points</span>
+                    </div>
+                    <div class="bg-pink-50 p-4 rounded-2xl text-center">
+                        <span class="block text-2xl font-bold text-pink-700">7</span>
+                        <span class="text-xs text-pink-600 font-semibold uppercase">Parameters</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-gray-800">7-Point Competitive Performance</h2>
+                <div class="h-1 w-20 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Hospital-Backed Chains</h3>
+                    <p class="text-sm text-gray-500 mb-8 italic">Strength in Medical Prowess & High-Risk Infrastructure.</p>
+                    <div class="chart-container">
+                        <canvas id="radarChartHospitals"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Specialized Fertility Centers</h3>
+                    <p class="text-sm text-gray-500 mb-8 italic">Strength in Aesthetic, Agility, & Focused Care.</p>
+                    <div class="chart-container">
+                        <canvas id="radarChartClinics"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20 bg-gray-900 rounded-[3rem] p-10 text-white shadow-2xl overflow-hidden relative">
+            <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-indigo-500 rounded-full blur-[120px] opacity-20"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 relative z-10">
+                <div class="flex flex-col justify-center">
+                    <h2 class="text-3xl font-bold mb-6">Sentiment Ratio</h2>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Visualizing the volume of positive vs. negative mentions regarding <strong>Medical Prowess</strong> and <strong>Aesthetic Integrity</strong>.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+                            <span class="text-sm text-gray-300 font-medium">Positive Mentions</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                            <span class="text-sm text-gray-300 font-medium">Negative/Critical Mentions</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 h-[350px]">
+                    <canvas id="sentimentBarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-gray-800 mb-12 text-center italic">Institutional Analysis</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <div class="bg-white rounded-3xl overflow-hidden card-shadow border border-gray-50 flex flex-col">
+                    <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 p-6">
+                        <h3 class="text-white text-xl font-bold">Cloudnine</h3>
+                        <p class="text-indigo-100 text-xs font-medium uppercase tracking-wider mt-1">Aesthetic & NICU Benchmark</p>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <div class="mb-6">
+                            <h4 class="text-xs font-bold text-green-600 uppercase mb-3 tracking-widest">Key Strengths</h4>
+                            <ul class="text-sm space-y-3 text-gray-600 font-medium">
+                                <li class="flex items-start gap-2"><span>✦</span> "Boutique hotel" aesthetic significantly lowers patient cortisol.</li>
+                                <li class="flex items-start gap-2"><span>✦</span> Medical Prowess: Best-in-class Level-3 NICU infrastructure.</li>
+                            </ul>
+                        </div>
+                        <div class="mb-8">
+                            <h4 class="text-xs font-bold text-red-500 uppercase mb-3 tracking-widest">Growth Areas</h4>
+                            <p class="text-sm text-gray-600 leading-relaxed italic">"Patient billing transparency remains a recurring negative sentiment marker."</p>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-gray-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Aesthetic Score</span>
+                                <span class="text-sm font-bold text-indigo-600">4.9/5</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                <div class="bg-indigo-600 h-1.5 rounded-full" style="width: 98%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl overflow-hidden card-shadow border border-gray-50 flex flex-col">
+                    <div class="bg-gradient-to-r from-teal-600 to-teal-700 p-6">
+                        <h3 class="text-white text-xl font-bold">Apollo Fertility</h3>
+                        <p class="text-teal-100 text-xs font-medium uppercase tracking-wider mt-1">Advanced Medical Prowess</p>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <div class="mb-6">
+                            <h4 class="text-xs font-bold text-green-600 uppercase mb-3 tracking-widest">Key Strengths</h4>
+                            <ul class="text-sm space-y-3 text-gray-600 font-medium">
+                                <li class="flex items-start gap-2"><span>✦</span> Technical Prowess: Optical Spindle tech for ICSI.</li>
+                                <li class="flex items-start gap-2"><span>✦</span> Unrivaled multi-specialty medical ecosystem backup.</li>
+                            </ul>
+                        </div>
+                        <div class="mb-8">
+                            <h4 class="text-xs font-bold text-red-500 uppercase mb-3 tracking-widest">Growth Areas</h4>
+                            <p class="text-sm text-gray-600 leading-relaxed italic">"Clinic look & aesthetic reported as sterile and corporate."</p>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-gray-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Prowess Score</span>
+                                <span class="text-sm font-bold text-teal-600">5.0/5</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                <div class="bg-teal-600 h-1.5 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl overflow-hidden card-shadow border border-gray-50 flex flex-col">
+                    <div class="bg-gradient-to-r from-purple-600 to-purple-700 p-6">
+                        <h3 class="text-white text-xl font-bold">Birla Fertility</h3>
+                        <p class="text-purple-100 text-xs font-medium uppercase tracking-wider mt-1">Aesthetic & Ethical Trust</p>
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <div class="mb-6">
+                            <h4 class="text-xs font-bold text-green-600 uppercase mb-3 tracking-widest">Key Strengths</h4>
+                            <ul class="text-sm space-y-3 text-gray-600 font-medium">
+                                <li class="flex items-start gap-2"><span>✦</span> "Zen" aesthetic creates a high-transparency environment.</li>
+                                <li class="flex items-start gap-2"><span>✦</span> Exceptional medical air-quality standards in labs.</li>
+                            </ul>
+                        </div>
+                        <div class="mb-8">
+                            <h4 class="text-xs font-bold text-red-500 uppercase mb-3 tracking-widest">Growth Areas</h4>
+                            <p class="text-sm text-gray-600 leading-relaxed italic">"Response times for administrative queries are high."</p>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-gray-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compassion Score</span>
+                                <span class="text-sm font-bold text-purple-600">4.5/5</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                <div class="bg-purple-600 h-1.5 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                </div>
+        </section>
+
+        <section class="bg-gradient-to-br from-indigo-900 to-slate-900 rounded-[3rem] p-12 text-white shadow-2xl relative overflow-hidden">
+             <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-pink-500 rounded-full blur-[120px] opacity-10"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+                <div>
+                    <h2 class="text-4xl font-bold mb-8">Executive Summary</h2>
+                    <div class="space-y-6">
+                        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm">
+                            <h4 class="font-bold text-indigo-400 mb-2">Medical Leader</h4>
+                            <p class="text-sm text-gray-300"><strong>Apollo</strong> holds the highest technical medical prowess score based on advanced lab hardware.</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm">
+                            <h4 class="font-bold text-pink-400 mb-2">Patient Psychology</h4>
+                            <p class="text-sm text-gray-300"><strong>Cloudnine</strong> leads the "Look & Aesthetic" dimension, critical for reducing first-time patient stress.</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm">
+                            <h4 class="font-bold text-purple-400 mb-2">Market Balance</h4>
+                            <p class="text-sm text-gray-300"><strong>Birla</strong> maintains the most consistent performance across Medical and Emotional parameters.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-[400px]">
+                    <canvas id="attributeBarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- CHART DATA & LOGIC ---
+        const attributes = ['Compassion', 'Safety', 'Dr. Quality', 'Responsiveness', 'Transparency', 'Med. Prowess', 'Aesthetic'];
+        const cloudnineData = [3, 5, 4.5, 3, 2.5, 4.8, 4.9];
+        const apolloData = [2.5, 5, 4, 3, 3, 5.0, 3.2];
+        const maxData = [3, 5, 4, 2.5, 3, 4.7, 2.8];
+        const oasisData = [3.5, 4, 4, 2.5, 3.5, 4.3, 3.8];
+        const birlaData = [4.5, 4, 4, 3.5, 4, 4.2, 4.5];
+        const indiaIvfData = [4, 3.5, 3.5, 4.5, 4.5, 3.5, 2.5];
+
+        // Radar Configs
+        const radarOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { r: { min: 0, max: 5, ticks: { display: false }, grid: { color: '#e2e8f0' } } },
+            plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } }
+        };
+
+        new Chart(document.getElementById('radarChartHospitals'), {
+            type: 'radar',
+            data: {
+                labels: attributes,
+                datasets: [
+                    { label: 'Cloudnine', data: cloudnineData, borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.05)', borderWidth: 3 },
+                    { label: 'Apollo', data: apolloData, borderColor: '#0d9488', backgroundColor: 'rgba(13, 148, 136, 0.05)', borderWidth: 3 },
+                    { label: 'Max', data: maxData, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.05)', borderWidth: 3 }
+                ]
+            },
+            options: radarOptions
+        });
+
+        new Chart(document.getElementById('radarChartClinics'), {
+            type: 'radar',
+            data: {
+                labels: attributes,
+                datasets: [
+                    { label: 'Oasis', data: oasisData, borderColor: '#db2777', backgroundColor: 'rgba(219, 39, 119, 0.05)', borderWidth: 3 },
+                    { label: 'Birla', data: birlaData, borderColor: '#9333ea', backgroundColor: 'rgba(147, 51, 234, 0.05)', borderWidth: 3 },
+                    { label: 'India IVF', data: indiaIvfData, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.05)', borderWidth: 3 }
+                ]
+            },
+            options: radarOptions
+        });
+
+        // Sentiment Bar Chart
+        new Chart(document.getElementById('sentimentBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Cloudnine', 'Apollo', 'Oasis', 'Birla', 'Max', 'India IVF'],
+                datasets: [
+                    { label: 'Positive', data: [150, 120, 90, 110, 85, 60], backgroundColor: '#34d399', borderRadius: 8 },
+                    { label: 'Negative', data: [45, 60, 35, 20, 40, 15], backgroundColor: '#f87171', borderRadius: 8 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { 
+                    x: { stacked: true, grid: { display: false }, ticks: { color: '#94a3b8' } },
+                    y: { stacked: true, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Final Aggregate Bar
+        const scores = [
+            {n: 'Cloudnine', s: cloudnineData.reduce((a,b)=>a+b,0)},
+            {n: 'Apollo', s: apolloData.reduce((a,b)=>a+b,0)},
+            {n: 'Oasis', s: oasisData.reduce((a,b)=>a+b,0)},
+            {n: 'Birla', s: birlaData.reduce((a,b)=>a+b,0)},
+            {n: 'Max', s: maxData.reduce((a,b)=>a+b,0)},
+            {n: 'India IVF', s: indiaIvfData.reduce((a,b)=>a+b,0)},
+        ].sort((a,b) => b.s - a.s);
+
+        new Chart(document.getElementById('attributeBarChart'), {
+            type: 'bar',
+            data: {
+                labels: scores.map(i => i.n),
+                datasets: [{ data: scores.map(i => i.s), backgroundColor: 'rgba(255,255,255,0.9)', borderRadius: 12 }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { 
+                    x: { display: false, max: 35 },
+                    y: { grid: { display: false }, ticks: { color: '#fff', font: { weight: 'bold' } } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    </script>
+</body>
+</html>
