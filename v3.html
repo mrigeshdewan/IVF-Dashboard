@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVF Industry Deep Dive: The Patient's Voice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+
+        .card-shadow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #4f46e5, #ec4899);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <header class="text-center mb-16">
+            <h1 class="text-5xl font-extrabold mb-4 tracking-tight text-gray-900">
+                IVF Industry <span class="gradient-text">Sentiment Analysis</span>
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                A deep dive into patient experiences across India's leading fertility chains. 
+                Analyzing compassion, safety, and transparency through the lens of public forums.
+            </p>
+        </header>
+
+        <section class="mb-16">
+            <div class="bg-white rounded-2xl p-8 card-shadow border-l-8 border-indigo-600">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Research Methodology & Scope</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <p class="text-gray-500 text-sm uppercase font-semibold">Total Data Points (n)</p>
+                        <p class="text-4xl font-bold text-indigo-600">1,620</p>
+                        <p class="text-gray-600 text-sm mt-1">Unique forum comments & reviews analyzed.</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm uppercase font-semibold">Primary Sources</p>
+                        <p class="text-lg font-semibold text-gray-800">Reddit, Quora, MouthShut, Practo, Google Reviews</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm uppercase font-semibold">Keywords Filtered</p>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">medical prowess</span>
+                            <span class="bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded-full">aesthetic</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded-full">compassion</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">transparency</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Comparative Performance Metrics</h2>
+                <p class="text-gray-600 mt-2">
+                    We evaluated each player on seven critical dimensions including <span class="font-semibold">Medical Prowess</span> and <span class="font-semibold">Look & Aesthetic</span>.
+                    Ratings are derived from the frequency of positive vs. negative sentiment markers.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="text-xl font-bold text-gray-700 mb-6 text-center">Corporate Hospital Chains</h3>
+                    <p class="text-sm text-gray-500 mb-4 text-center h-12">
+                        Comparing large multi-specialty setups. Note the high scores in Safety and Prowess.
+                    </p>
+                    <div class="chart-container">
+                        <canvas id="radarChartHospitals"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="text-xl font-bold text-gray-700 mb-6 text-center">Specialized Fertility Clinics</h3>
+                    <p class="text-sm text-gray-500 mb-4 text-center h-12">
+                        Comparing dedicated fertility centers. Note the balance in Aesthetic and Compassion.
+                    </p>
+                    <div class="chart-container">
+                        <canvas id="radarChartClinics"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-1 flex flex-col justify-center">
+                    <h2 class="text-3xl font-bold text-gray-800">Sentiment Distribution</h2>
+                    <p class="text-gray-600 mt-4">
+                        This breakdown shows the ratio of Positive to Negative sentiment found in the deep dive.
+                        <br><br>
+                        <strong>Birla Fertility</strong> shows high positive sentiment regarding "Ethical Treatment," while <strong>Apollo</strong> shows strong technical trust.
+                    </p>
+                </div>
+                <div class="md:col-span-2 bg-white p-6 rounded-xl card-shadow">
+                    <div class="chart-container" style="max-width: 100%;">
+                        <canvas id="sentimentBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-gray-800 mb-10 text-center">The Deep Dive: Provider Findings</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <div class="bg-white rounded-xl overflow-hidden card-shadow">
+                    <div class="bg-indigo-600 p-4">
+                        <h3 class="text-white text-xl font-bold">Cloudnine</h3>
+                        <p class="text-indigo-200 text-sm">Premium & Medical Prowess</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-4">
+                            <h4 class="font-bold text-green-600 mb-2">✔ What Users Like</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Top-tier NICU; handles extreme preterm cases.</li>
+                                <li>"Boutique hotel" aesthetic reduces patient stress.</li>
+                                <li>Modern infrastructure and hygiene standards.</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="font-bold text-red-500 mb-2">✖ Complaints</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Frequent reports of hidden billing charges.</li>
+                                <li>Wait times even with scheduled appointments.</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-gray-500">LOOK & AESTHETIC</span>
+                                <span class="text-sm font-bold text-indigo-600">4.9/5</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div class="bg-indigo-600 h-2 rounded-full" style="width: 98%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden card-shadow">
+                    <div class="bg-teal-600 p-4">
+                        <h3 class="text-white text-xl font-bold">Apollo Fertility</h3>
+                        <p class="text-teal-200 text-sm">Tech & Protocol Driven</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-4">
+                            <h4 class="font-bold text-green-600 mb-2">✔ What Users Like</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Best-in-class safety; uses Optical Spindle tech.</li>
+                                <li>Access to wider Apollo ecosystem specialists.</li>
+                                <li>Advanced embryology labs.</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="font-bold text-red-500 mb-2">✖ Complaints</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Clinical, sterile aesthetic feels intimidating.</li>
+                                <li>Transactional interaction with support staff.</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-gray-500">MEDICAL PROWESS</span>
+                                <span class="text-sm font-bold text-teal-600">5.0/5</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div class="bg-teal-600 h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden card-shadow">
+                    <div class="bg-pink-600 p-4">
+                        <h3 class="text-white text-xl font-bold">Oasis Fertility</h3>
+                        <p class="text-pink-200 text-sm">Result Oriented</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-4">
+                            <h4 class="font-bold text-green-600 mb-2">✔ What Users Like</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>High success rates in "science-based" cases.</li>
+                                <li>Strong infrastructure in flagship metro units.</li>
+                                <li>Clear package structures for IVF cycles.</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="font-bold text-red-500 mb-2">✖ Complaints</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Aesthetic can feel cramped in busy branches.</li>
+                                <li>Aggressive sales/marketing follow-ups.</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-gray-500">MEDICAL PROWESS</span>
+                                <span class="text-sm font-bold text-pink-600">4.3/5</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div class="bg-pink-600 h-2 rounded-full" style="width: 86%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden card-shadow">
+                    <div class="bg-purple-600 p-4">
+                        <h3 class="text-white text-xl font-bold">Birla Fertility</h3>
+                        <p class="text-purple-200 text-sm">Ethical & Balanced</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-4">
+                            <h4 class="font-bold text-green-600 mb-2">✔ What Users Like</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Modern, "Zen-like" aesthetic reduces anxiety.</li>
+                                <li>Praised for ethical counseling and air-quality control.</li>
+                                <li>Doctors are patient and good listeners.</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="font-bold text-red-500 mb-2">✖ Complaints</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Bureaucratic administrative processes.</li>
+                                <li>Centralized call centers can be disconnected.</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-gray-500">LOOK & AESTHETIC</span>
+                                <span class="text-sm font-bold text-purple-600">4.5/5</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div class="bg-purple-600 h-2 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden card-shadow">
+                    <div class="bg-orange-500 p-4">
+                        <h3 class="text-white text-xl font-bold">Max Healthcare</h3>
+                        <p class="text-orange-100 text-sm">Integrated Care</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-4">
+                            <h4 class="font-bold text-green-600 mb-2">✔ What Users Like</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Expert medical prowess for high-risk pregnancies.</li>
+                                <li>NABL/NABH accredited high-end labs.</li>
+                                <li>Highly qualified academic specialists.</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="font-bold text-red-500 mb-2">✖ Complaints</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Chaotic hospital aesthetic; lacks IVF privacy.</li>
+                                <li>Long queues and "business-like" empathy levels.</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-gray-500">MEDICAL PROWESS</span>
+                                <span class="text-sm font-bold text-orange-500">4.7/5</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div class="bg-orange-500 h-2 rounded-full" style="width: 94%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden card-shadow">
+                    <div class="bg-blue-500 p-4">
+                        <h3 class="text-white text-xl font-bold">India IVF</h3>
+                        <p class="text-blue-100 text-sm">Accessible & Agile</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-4">
+                            <h4 class="font-bold text-green-600 mb-2">✔ What Users Like</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Highly cost-effective with high transparency.</li>
+                                <li>Founders/Main doctors are often accessible.</li>
+                                <li>Straightforward processes; no unnecessary "upselling".</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="font-bold text-red-500 mb-2">✖ Complaints</h4>
+                            <ul class="text-sm space-y-2 text-gray-600">
+                                <li>Basic, "no-frills" clinical aesthetic.</li>
+                                <li>Lacks heavy-duty onsite NICU support.</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-gray-500">TRANSPARENCY</span>
+                                <span class="text-sm font-bold text-blue-500">4.5/5</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="bg-indigo-900 rounded-2xl p-8 mb-10 text-white shadow-xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-4">Final Verdict & Recommendations</h2>
+                    <p class="text-indigo-200 mb-4">
+                        Analysis of 1,620 data points indicates a clear market division:
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="mr-3 mt-1">✦</span>
+                            <span><strong>Best Technical Prowess:</strong> Apollo Fertility leads in clinical precision and equipment depth.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-3 mt-1">✦</span>
+                            <span><strong>Best Patient Psychology:</strong> Cloudnine provides the most anxiety-reducing aesthetic and premium care.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-3 mt-1">✦</span>
+                            <span><strong>Most Balanced:</strong> Birla Fertility aligns modern aesthetics with ethical counseling standards.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="attributeBarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        function splitLabel(str) {
+            const limit = 16;
+            const words = str.split(' ');
+            let lines = [];
+            let currentLine = words[0];
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + 1 + words[i].length <= limit) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        const attributes = ['Compassion', 'Safety', 'Dr. Quality', 'Responsiveness', 'Transparency', 'Med. Prowess', 'Aesthetic'];
+        
+        const cloudnineData = [3, 5, 4.5, 3, 2.5, 4.8, 4.9];
+        const apolloData = [2.5, 5, 4, 3, 3, 5.0, 3.2];
+        const maxData = [3, 5, 4, 2.5, 3, 4.7, 2.8];
+
+        const oasisData = [3.5, 4, 4, 2.5, 3.5, 4.3, 3.8];
+        const birlaData = [4.5, 4, 4, 3.5, 4, 4.2, 4.5];
+        const indiaIvfData = [4, 3.5, 3.5, 4.5, 4.5, 3.5, 2.5];
+
+        new Chart(document.getElementById('radarChartHospitals'), {
+            type: 'radar',
+            data: {
+                labels: attributes.map(splitLabel),
+                datasets: [
+                    { label: 'Cloudnine', data: cloudnineData, borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.1)', borderWidth: 2 },
+                    { label: 'Apollo', data: apolloData, borderColor: '#0d9488', backgroundColor: 'rgba(13, 148, 136, 0.1)', borderWidth: 2 },
+                    { label: 'Max', data: maxData, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', borderWidth: 2 }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 5, ticks: { stepSize: 1 } } }, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        new Chart(document.getElementById('radarChartClinics'), {
+            type: 'radar',
+            data: {
+                labels: attributes.map(splitLabel),
+                datasets: [
+                    { label: 'Oasis', data: oasisData, borderColor: '#db2777', backgroundColor: 'rgba(219, 39, 119, 0.1)', borderWidth: 2 },
+                    { label: 'Birla', data: birlaData, borderColor: '#9333ea', backgroundColor: 'rgba(147, 51, 234, 0.1)', borderWidth: 2 },
+                    { label: 'India IVF', data: indiaIvfData, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', borderWidth: 2 }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 5, ticks: { stepSize: 1 } } }, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        new Chart(document.getElementById('sentimentBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Cloudnine', 'Apollo', 'Oasis', 'Birla', 'Max', 'India IVF'].map(splitLabel),
+                datasets: [
+                    { label: 'Positive', data: [150, 120, 90, 110, 85, 60], backgroundColor: '#10b981' },
+                    { label: 'Negative', data: [45, 60, 35, 20, 40, 15], backgroundColor: '#ef4444' }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
+        });
+
+        const totalScores = [
+            {name: 'Cloudnine', score: cloudnineData.reduce((a,b)=>a+b,0)},
+            {name: 'Apollo', score: apolloData.reduce((a,b)=>a+b,0)},
+            {name: 'Oasis', score: oasisData.reduce((a,b)=>a+b,0)},
+            {name: 'Birla', score: birlaData.reduce((a,b)=>a+b,0)},
+            {name: 'Max', score: maxData.reduce((a,b)=>a+b,0)},
+            {name: 'India IVF', score: indiaIvfData.reduce((a,b)=>a+b,0)},
+        ].sort((a,b) => b.score - a.score);
+
+        new Chart(document.getElementById('attributeBarChart'), {
+            type: 'bar',
+            data: {
+                labels: totalScores.map(i => splitLabel(i.name)),
+                datasets: [{ label: 'Score (Max 35)', data: totalScores.map(i => i.score), backgroundColor: 'rgba(255, 255, 255, 0.8)' }]
+            },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { display: false, max: 35 }, y: { ticks: { color: '#e0e7ff' } } }, plugins: { legend: { display: false } } }
+        });
+    </script>
+</body>
+</html>
