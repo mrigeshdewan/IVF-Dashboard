@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVF Clinic Financial & Market Repository</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-active {
+            border-bottom: 3px solid #0ea5e9;
+            color: #0ea5e9;
+            background-color: #f0f9ff;
+        }
+        .copy-toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #334155;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+        }
+        .copy-toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+        @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
+        
+        /* Chart container constraint */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 300px;
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body class="text-slate-900 leading-relaxed">
+
+    <div id="toast" class="copy-toast font-bold">📋 Data copied to clipboard! Paste into Sheets.</div>
+
+    <div class="max-w-7xl mx-auto px-4 py-10">
+        <!-- Header -->
+        <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+                <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">IVF Clinic <span class="text-sky-500">Master Data</span></h1>
+                <p class="text-slate-500 mt-2 text-lg">Comprehensive financial modeling and market benchmarks for Google Sheets export.</p>
+            </div>
+            <div class="bg-white border-2 border-sky-500/20 rounded-2xl p-4 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-2xl">📊</div>
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Breakeven Target</p>
+                    <p class="text-xl font-extrabold text-sky-600">30 Cycles / Mo</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <p class="text-slate-400 text-xs font-bold uppercase mb-1">Max CapEx</p>
+                <p class="text-2xl font-black text-slate-800">₹2.5 Cr</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <p class="text-slate-400 text-xs font-bold uppercase mb-1">Monthly OpEx</p>
+                <p class="text-2xl font-black text-sky-600">₹15.5 L</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <p class="text-slate-400 text-xs font-bold uppercase mb-1">Gross Margin</p>
+                <p class="text-2xl font-black text-emerald-500">57%</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <p class="text-slate-400 text-xs font-bold uppercase mb-1">Net Margin</p>
+                <p class="text-2xl font-black text-orange-500">17%</p>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="bg-white rounded-t-3xl shadow-sm border-b overflow-hidden flex flex-wrap">
+            <button onclick="showTab('market')" id="btn-market" class="tab-btn px-8 py-5 font-bold text-sm transition-all tab-active">🌐 MARKET METRICS</button>
+            <button onclick="showTab('capex')" id="btn-capex" class="tab-btn px-8 py-5 font-bold text-sm transition-all text-slate-500 hover:bg-slate-50">🏗️ CAPEX SETUP</button>
+            <button onclick="showTab('opex')" id="btn-opex" class="tab-btn px-8 py-5 font-bold text-sm transition-all text-slate-500 hover:bg-slate-50">⚙️ MONTHLY OPEX</button>
+            <button onclick="showTab('economics')" id="btn-economics" class="tab-btn px-8 py-5 font-bold text-sm transition-all text-slate-500 hover:bg-slate-50">💰 UNIT ECONOMICS</button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="bg-white p-8 rounded-b-3xl shadow-xl min-h-[500px]">
+            <div class="flex justify-between items-center mb-8">
+                <div id="tab-title">
+                    <h2 class="text-2xl font-extrabold text-slate-800" id="current-title">Market Benchmarks</h2>
+                    <p class="text-slate-500 text-sm mt-1" id="current-desc">National and regional IVF industry statistics.</p>
+                </div>
+                <button onclick="copyCurrentTable()" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl transition-all font-bold shadow-lg active:scale-95">
+                    <span>📋</span> Copy Data for Sheets
+                </button>
+            </div>
+
+            <!-- Table Container -->
+            <div class="overflow-x-auto" id="table-container">
+                <!-- Market Table -->
+                <table id="table-market" class="data-table w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50">
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider">Indicator</th>
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider">Value</th>
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider">Strategic Note</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr><td class="p-4 font-bold text-slate-700">Annual IVF Cycles (India)</td><td class="p-4 font-black text-sky-600">250,000 - 300,000</td><td class="p-4 text-slate-500 italic">Expected to grow at 16% CAGR</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Addressable Infertility</td><td class="p-4 font-black text-sky-600">28 Million Couples</td><td class="p-4 text-slate-500 italic">Significant supply-demand gap in Tier 2</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Avg Success Rate (Standard)</td><td class="p-4 font-black text-sky-600">35% - 45%</td><td class="p-4 text-slate-500 italic">Hub excellence target: 55%+</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Market Value 2030 (Est)</td><td class="p-4 font-black text-sky-600">₹14,000 Cr</td><td class="p-4 text-slate-500 italic">Organized sector penetration rising</td></tr>
+                    </tbody>
+                </table>
+
+                <!-- Capex Table -->
+                <table id="table-capex" class="data-table w-full text-left hidden">
+                    <thead>
+                        <tr class="bg-slate-50">
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider">Component</th>
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider text-right">Budget Low (₹)</th>
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider text-right">Budget High (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr><td class="p-4 font-bold text-slate-700">Core Lab Equipment (ICSI/Incubators)</td><td class="p-4 text-right">5,000,000</td><td class="p-4 text-right font-black text-sky-600">6,500,000</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Specialized Imaging (Voluson USG)</td><td class="p-4 text-right">3,000,000</td><td class="p-4 text-right font-black text-sky-600">4,500,000</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Infrastructure & Sterile Zoning</td><td class="p-4 text-right">6,000,000</td><td class="p-4 text-right font-black text-sky-600">8,000,000</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Cryopreservation Gear</td><td class="p-4 text-right">1,500,000</td><td class="p-4 text-right font-black text-sky-600">2,000,000</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Furniture, IT & Admin Setup</td><td class="p-4 text-right">1,500,000</td><td class="p-4 text-right font-black text-sky-600">2,000,000</td></tr>
+                        <tr class="bg-sky-50"><td class="p-4 font-black text-sky-900">ESTIMATED TOTAL CAPEX</td><td class="p-4 text-right font-black text-sky-900">₹1.8 Cr</td><td class="p-4 text-right font-black text-sky-900">₹2.5 Cr</td></tr>
+                    </tbody>
+                </table>
+
+                <!-- Opex Table -->
+                <table id="table-opex" class="data-table w-full text-left hidden">
+                    <thead>
+                        <tr class="bg-slate-50">
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider">Monthly Expense Item</th>
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider text-right">Cost (₹ Lakhs)</th>
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider">Constraint</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr><td class="p-4 font-bold text-slate-700">Staff Salaries (9 Core Personnel)</td><td class="p-4 text-right font-black text-sky-600">5.50</td><td class="p-4 text-slate-500">Fixed monthly cost</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Marketing & Digital Ad Spend</td><td class="p-4 text-right font-black text-sky-600">4.00</td><td class="p-4 text-slate-500">Growth engine</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Real Estate Rental (2500 sq ft)</td><td class="p-4 text-right font-black text-sky-600">3.00</td><td class="p-4 text-slate-500">Approx ₹120/sq ft</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Utilities, CAM & HVAC Maintenance</td><td class="p-4 text-right font-black text-sky-600">1.00</td><td class="p-4 text-slate-500">High load facility</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">General Admin & Software</td><td class="p-4 text-right font-black text-sky-600">0.50</td><td class="p-4 text-slate-500">Subscriptions & Misc</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Interest on Debt</td><td class="p-4 text-right font-black text-sky-600">1.50</td><td class="p-4 text-slate-500">Estimated financing</td></tr>
+                        <tr class="bg-slate-50"><td class="p-4 font-black text-slate-900">TOTAL FIXED MONTHLY BURN</td><td class="p-4 text-right font-black text-slate-900">₹15.50 L</td><td></td></tr>
+                    </tbody>
+                </table>
+
+                <!-- Unit Economics Table -->
+                <table id="table-economics" class="data-table w-full text-left hidden">
+                    <thead>
+                        <tr class="bg-slate-50">
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider">Procedure Component</th>
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider text-right">Inflow (₹)</th>
+                            <th class="p-4 border-b-2 border-slate-100 font-extrabold text-slate-500 text-xs uppercase tracking-wider text-right">Variable Cost (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr><td class="p-4 font-bold text-slate-700">Stimulation Meds (FSH/HMG)</td><td class="p-4 text-right">80,000</td><td class="p-4 text-right font-black text-red-500">65,000</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Lab Consumables & Media</td><td class="p-4 text-right">90,000</td><td class="p-4 text-right font-black text-red-500">40,000</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Clinical Procedures</td><td class="p-4 text-right">60,000</td><td class="p-4 text-right font-black text-red-500">25,000</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Diagnostics (Intra-cycle)</td><td class="p-4 text-right">15,000</td><td class="p-4 text-right font-black text-red-500">10,000</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Advanced Add-ons (Laser/Blast)</td><td class="p-4 text-right">35,000</td><td class="p-4 text-right font-black text-red-500">3,000</td></tr>
+                        <tr><td class="p-4 font-bold text-slate-700">Incidental Costs (CAC/Referral)</td><td class="p-4 text-right">35,000</td><td class="p-4 text-right font-black text-red-500">88,000</td></tr>
+                        <tr class="bg-emerald-50"><td class="p-4 font-black text-emerald-900">REALIZED TOTAL PER PATIENT</td><td class="p-4 text-right font-black text-emerald-900">₹3,15,000</td><td class="p-4 text-right font-black text-red-900">₹2,31,000</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Strategy Section -->
+            <div class="mt-12 p-8 bg-sky-50 rounded-2xl border border-sky-100">
+                <h3 class="text-xl font-extrabold text-sky-900 mb-4">Commercial Growth Model</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <p class="font-black text-slate-800 mb-2">1. Pharma Negotiation (+₹15k)</p>
+                        <p class="text-sm text-slate-600">By bypasssing distributors and negotiating directly with manufacturers for bulk stimulation drugs, margins expand by 30-40% on variable input.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <p class="font-black text-slate-800 mb-2">2. Service Bundling (+₹32k)</p>
+                        <p class="text-sm text-slate-600">Upselling Blastocyst Culture and Laser Assisted Hatching. Incremental lab cost is negligible (~₹3k), but revenue realized is ₹35k.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-10 text-center text-slate-400 text-sm pb-10">
+            <p>© 2025 IVF Strategic Planning Dashboard. Built for precise financial modeling.</p>
+            <p class="mt-2">Note: All values are estimates based on standard Tier-1 city clinic models.</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentTab = 'market';
+
+        const tabConfig = {
+            market: {
+                title: 'Market Benchmarks',
+                desc: 'National and regional IVF industry statistics.'
+            },
+            capex: {
+                title: 'Clinic Startup CapEx',
+                desc: 'Detailed breakdown of the ₹1.8 Cr - ₹2.5 Cr initial investment.'
+            },
+            opex: {
+                title: 'Monthly Fixed OpEx',
+                desc: 'Burn rate including staff, rent, and marketing retainers.'
+            },
+            economics: {
+                title: 'Cycle Unit Economics',
+                desc: 'Inflow vs Outflow analysis per IVF cycle patient.'
+            }
+        };
+
+        function showTab(tabId) {
+            currentTab = tabId;
+            
+            // Toggle Buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById('btn-' + tabId).classList.add('tab-active');
+            document.getElementById('btn-' + tabId).classList.remove('text-slate-500');
+
+            // Toggle Tables
+            document.querySelectorAll('.data-table').forEach(table => table.classList.add('hidden'));
+            document.getElementById('table-' + tabId).classList.remove('hidden');
+
+            // Update Header
+            document.getElementById('current-title').innerText = tabConfig[tabId].title;
+            document.getElementById('current-desc').innerText = tabConfig[tabId].desc;
+        }
+
+        function copyCurrentTable() {
+            const table = document.getElementById('table-' + currentTab);
+            let csv = [];
+            const rows = table.querySelectorAll('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const row = [], cols = rows[i].querySelectorAll('td, th');
+                for (let j = 0; j < cols.length; j++) {
+                    // Clean text for CSV
+                    let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ');
+                    data = data.replace(/"/g, '""');
+                    row.push('"' + data + '"');
+                }
+                csv.push(row.join(','));
+            }
+            const csvString = csv.join('\n');
+
+            // Copy to clipboard
+            const textArea = document.createElement("textarea");
+            textArea.value = csvString;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            showToast();
+        }
+
+        function showToast() {
+            const toast = document.getElementById("toast");
+            toast.className = "copy-toast show font-bold";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+    </script>
+</body>
+</html>
