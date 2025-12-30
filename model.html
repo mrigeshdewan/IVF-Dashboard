@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVF Clinic: Financial Viability & Growth Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles for Chart Containers */
+        body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; color: #1e293b; }
+        
+        /* Vibrant Palette: 
+           Primary: #00B4D8 (Cyan Blue)
+           Secondary: #0077B6 (Deep Blue)
+           Accent: #FF9F1C (Tangerine)
+           Success: #2EC4B6 (Teal)
+           Dark: #03045E (Midnight)
+        */
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            max-height: 400px;
+            margin: 0 auto;
+        }
+
+        .chart-container-lg {
+            height: 450px;
+            max-height: 500px;
+        }
+
+        .chart-container-sm {
+            height: 250px;
+            max-height: 300px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-value {
+            color: #0077B6;
+            font-weight: 800;
+        }
+        
+        .accent-text {
+            color: #FF9F1C;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00B4D8; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0077B6; 
+        }
+
+        .timeline-item {
+            border-left: 4px solid #00B4D8;
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: #FF9F1C;
+            border-radius: 50%;
+        }
+    </style>
+    <!-- 
+        Palette Used: Vibrant & Professional
+        #00B4D8 - Cyan (Primary)
+        #03045E - Navy (Text/Headers)
+        #FF9F1C - Orange (Accent/Callouts)
+        #CAF0F8 - Light Cyan (Backgrounds)
+    -->
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navigation / Header -->
+    <header class="bg-[#03045E] text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">IVF <span class="text-[#00B4D8]">Growth</span> Engine</h1>
+                <p class="text-xs text-gray-300">Financial Model & Strategic Roadmap</p>
+            </div>
+            <div class="hidden md:block">
+                <span class="bg-[#FF9F1C] text-[#03045E] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Breakeven: 30 Cycles</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+
+        <!-- Section 1: Introduction & Executive Summary -->
+        <section id="executive-summary" class="animate-fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-[#03045E] mb-4">The Business of Life</h2>
+                    <p class="text-lg text-slate-600 leading-relaxed mb-4">
+                        Building a successful IVF clinic requires balancing high initial capital expenditure with rigorous operational efficiency. This model outlines a path from a <strong>₹2.5 Cr setup</strong> to a profitable, scalable entity achieving <strong>17% Net Margins</strong>.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        The core challenge is volume: crossing the <strong>30-cycle monthly threshold</strong> to cover fixed costs, after which profitability accelerates through strategic bundling and supply chain leverage.
+                    </p>
+                </div>
+                <!-- Key Metrics Grid -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="card p-6 text-center border-t-4 border-[#00B4D8]">
+                        <h3 class="text-gray-500 text-sm font-semibold uppercase">Total Capex</h3>
+                        <p class="metric-value text-3xl mt-2">₹2.5 Cr</p>
+                        <p class="text-xs text-gray-400">Max Estimate</p>
+                    </div>
+                    <div class="card p-6 text-center border-t-4 border-[#FF9F1C]">
+                        <h3 class="text-gray-500 text-sm font-semibold uppercase">Monthly Burn</h3>
+                        <p class="metric-value text-3xl mt-2 text-[#FF9F1C]">₹15.5 L</p>
+                        <p class="text-xs text-gray-400">Fixed Opex</p>
+                    </div>
+                    <div class="card p-6 text-center border-t-4 border-[#2EC4B6]">
+                        <h3 class="text-gray-500 text-sm font-semibold uppercase">Rev Per Cycle</h3>
+                        <p class="metric-value text-3xl mt-2 text-[#2EC4B6]">₹3.15 L</p>
+                        <p class="text-xs text-gray-400">Realized</p>
+                    </div>
+                    <div class="card p-6 text-center border-t-4 border-[#03045E]">
+                        <h3 class="text-gray-500 text-sm font-semibold uppercase">Net Margin</h3>
+                        <p class="metric-value text-3xl mt-2 text-[#03045E]">17%</p>
+                        <p class="text-xs text-gray-400">Target</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Capital Expenditure (Capex) -->
+        <section id="capex" class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+            <h2 class="text-2xl font-bold text-[#03045E] mb-2">Capital Injection Breakdown</h2>
+            <p class="text-gray-600 mb-6">Where does the initial ₹1.8 Cr – ₹2.5 Cr investment go? The majority is allocated to sterile infrastructure and core lab technology.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="chart-container">
+                    <canvas id="capexChart"></canvas>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="text-2xl">🏥</div>
+                        <div>
+                            <h4 class="font-bold text-[#0077B6]">Infrastructure (₹80L)</h4>
+                            <p class="text-sm text-gray-500">Sterile zoning, HVAC, AHU, and high-end interiors are the largest cost driver, ensuring clinical safety.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="text-2xl">🔬</div>
+                        <div>
+                            <h4 class="font-bold text-[#0077B6]">Core Lab Equipment (₹65L)</h4>
+                            <p class="text-sm text-gray-500">ICSI machines, incubators, and centrifuges. The heart of the embryology lab.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="text-2xl">📸</div>
+                        <div>
+                            <h4 class="font-bold text-[#0077B6]">Imaging & Diagnostics (₹45L)</h4>
+                            <p class="text-sm text-gray-500">High-end USG (Voluson) for precise monitoring.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Operational Expenditure (Opex) -->
+        <section id="opex" class="bg-[#f8fafc] rounded-2xl p-8">
+            <h2 class="text-2xl font-bold text-[#03045E] mb-2">Monthly Operational Burn</h2>
+            <p class="text-gray-600 mb-6">To keep the lights on and staff paid, the clinic burns ₹15.5 Lakh monthly. Marketing is a significant lever for growth, consuming ₹4 Lakh.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 chart-container chart-container-lg">
+                    <canvas id="opexChart"></canvas>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md flex flex-col justify-center">
+                    <h3 class="text-xl font-bold text-[#FF9F1C] mb-4">Cost Insights</h3>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex justify-between border-b pb-2">
+                            <span>Staff (9 Pax)</span>
+                            <span class="font-bold">₹5.5L</span>
+                        </li>
+                        <li class="flex justify-between border-b pb-2">
+                            <span>Marketing</span>
+                            <span class="font-bold">₹4.0L</span>
+                        </li>
+                        <li class="flex justify-between border-b pb-2">
+                            <span>Real Estate</span>
+                            <span class="font-bold">₹3.0L</span>
+                        </li>
+                        <li class="flex justify-between border-b pb-2">
+                            <span>Utilities</span>
+                            <span class="font-bold">₹1.0L</span>
+                        </li>
+                    </ul>
+                    <div class="mt-6 bg-blue-50 p-4 rounded-lg">
+                        <p class="text-xs text-blue-800 font-semibold">💡 Insight</p>
+                        <p class="text-xs text-blue-600 mt-1">Marketing is nearly 25% of the monthly budget, highlighting the aggressive acquisition strategy needed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Unit Economics -->
+        <section id="unit-economics">
+            <h2 class="text-2xl font-bold text-[#03045E] mb-2">Unit Economics: Per Cycle Profitability</h2>
+            <p class="text-gray-600 mb-6">Breaking down the ₹3.15 Lakh realized revenue per patient against the variable costs to reveal the true margins.</p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="font-bold text-center mb-4">Revenue vs Costs Breakdown</h3>
+                    <div class="chart-container">
+                        <canvas id="unitEcoChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-4">
+                    <!-- Revenue Waterfall Visual using HTML/CSS -->
+                    <div class="bg-white p-6 rounded-xl shadow-md relative overflow-hidden">
+                        <h3 class="font-bold text-[#03045E] mb-4">The Profit Path</h3>
+                        
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-500">Realized Revenue</span>
+                            <span class="text-lg font-bold text-[#00B4D8]">₹3.15 Lakh</span>
+                        </div>
+                        <div class="w-full bg-gray-200 h-2 rounded-full mb-4">
+                            <div class="bg-[#00B4D8] h-2 rounded-full" style="width: 100%"></div>
+                        </div>
+
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-red-400">- Variable Costs (Input)</span>
+                            <span class="text-sm font-bold text-red-400">₹1.55 Lakh</span>
+                        </div>
+                        <div class="w-full bg-gray-200 h-2 rounded-full mb-4">
+                            <div class="bg-red-400 h-2 rounded-full" style="width: 49%"></div>
+                        </div>
+
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-[#FF9F1C]">= Gross Margin</span>
+                            <span class="text-lg font-bold text-[#FF9F1C]">₹1.60 Lakh (51%)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 h-2 rounded-full mb-4">
+                            <div class="bg-[#FF9F1C] h-2 rounded-full" style="width: 51%"></div>
+                        </div>
+
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-red-300">- Incidentals & Allocated Opex</span>
+                            <span class="text-sm font-bold text-red-300">~₹1.06 Lakh</span>
+                        </div>
+                         <div class="w-full bg-gray-200 h-2 rounded-full mb-4">
+                            <div class="bg-red-300 h-2 rounded-full" style="width: 33%"></div>
+                        </div>
+
+                        <div class="flex items-center justify-between mt-4 bg-green-50 p-2 rounded">
+                            <span class="text-sm font-bold text-green-700">Net Profit Per Cycle</span>
+                            <span class="text-xl font-bold text-green-600">₹54,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Breakeven Analysis -->
+        <section id="breakeven" class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-1">
+                    <h2 class="text-2xl font-bold text-[#03045E] mb-2">The 30-Cycle Target</h2>
+                    <p class="text-gray-600 text-sm mb-4">
+                        The clinic breaks even at roughly 30 cycles. Below this, fixed costs eat into capital. Above this, every cycle contributes significantly to pure profit.
+                    </p>
+                    <div class="bg-[#03045E] text-white p-4 rounded-lg text-center mb-4">
+                        <span class="block text-4xl font-bold text-[#FF9F1C]">30</span>
+                        <span class="text-xs uppercase tracking-widest">Cycles / Month</span>
+                    </div>
+                    <p class="text-xs text-gray-500 italic">
+                        *Chart shows the intersection of Total Revenue and Total Cost (Fixed + Variable).
+                    </p>
+                </div>
+                <div class="md:col-span-2 chart-container">
+                    <canvas id="breakevenChart"></canvas>
+                </div>
+             </div>
+        </section>
+
+        <!-- Section 6: Growth & Strategy -->
+        <section id="growth" class="bg-[#e0f2fe] rounded-2xl p-8">
+            <h2 class="text-2xl font-bold text-[#03045E] mb-6 text-center">Growth Levers: Unlocking Value</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Strategy 1: Bundling -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-lg font-bold text-[#0077B6] mb-2">Strategy 1: The Bundling Multiplier</h3>
+                    <p class="text-sm text-gray-600 mb-4">Adding Laser Hatching + Blastocyst Culture increases revenue significantly with minimal cost.</p>
+                    <div class="chart-container-sm">
+                        <canvas id="bundlingChart"></canvas>
+                    </div>
+                    <div class="mt-4 flex justify-between text-xs font-bold text-gray-500">
+                        <span>Cost Increase: <span class="text-red-500">+₹3k</span></span>
+                        <span>Profit Increase: <span class="text-green-500">+₹37k</span></span>
+                    </div>
+                </div>
+
+                <!-- Strategy 2: Pharma Negotiation -->
+                <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#0077B6] mb-2">Strategy 2: Supply Chain Optimization</h3>
+                        <p class="text-sm text-gray-600 mb-4">Direct negotiation with pharma giants can yield 30-40% savings on stimulation meds.</p>
+                        
+                        <div class="space-y-4 mt-6">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold mr-4">OLD</div>
+                                <div>
+                                    <p class="text-sm font-semibold">Standard Cost</p>
+                                    <p class="text-xl font-bold text-gray-800">₹75,000</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-center">
+                                <span class="text-gray-400 text-2xl">⬇️ 40% Savings</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold mr-4">NEW</div>
+                                <div>
+                                    <p class="text-sm font-semibold">Negotiated Cost</p>
+                                    <p class="text-xl font-bold text-green-600">₹45,000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded mt-4 text-center">
+                        <p class="text-sm font-bold text-green-800">Impact: Direct Gross Margin Expansion</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Acquisition Roadmap -->
+        <section id="acquisition" class="mb-12">
+            <h2 class="text-2xl font-bold text-[#03045E] mb-8">Customer Acquisition Timeline</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Phase 1 -->
+                <div class="timeline-item">
+                    <h4 class="text-xl font-bold text-[#00B4D8]">First 6 Months</h4>
+                    <span class="text-xs font-semibold text-gray-400 uppercase">Survival Mode</span>
+                    <ul class="mt-4 space-y-2 text-sm text-gray-600">
+                        <li>🎯 <strong>Goal:</strong> Fill initial capacity.</li>
+                        <li>📢 <strong>PPC Ads:</strong> High-intent keywords ("IVF cost").</li>
+                        <li>🤝 <strong>Referrals:</strong> ₹20-30k payout to OBGYNs.</li>
+                        <li>💰 <strong>Budget:</strong> Heavy weight on Performance Marketing.</li>
+                    </ul>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="timeline-item">
+                    <h4 class="text-xl font-bold text-[#00B4D8]">Year 1</h4>
+                    <span class="text-xs font-semibold text-gray-400 uppercase">Stabilization</span>
+                    <ul class="mt-4 space-y-2 text-sm text-gray-600">
+                        <li>🎯 <strong>Goal:</strong> Lower CAC & Build Trust.</li>
+                        <li>📝 <strong>Content:</strong> Success stories & Blogs.</li>
+                        <li>⭐ <strong>Reviews:</strong> Google My Business optimization.</li>
+                        <li>📉 <strong>CAC:</strong> Optimize to <₹35k.</li>
+                    </ul>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="timeline-item">
+                    <h4 class="text-xl font-bold text-[#00B4D8]">Year 5</h4>
+                    <span class="text-xs font-semibold text-gray-400 uppercase">Market Dominance</span>
+                    <ul class="mt-4 space-y-2 text-sm text-gray-600">
+                        <li>🎯 <strong>Goal:</strong> Scale & Brand Equity.</li>
+                        <li>🏥 <strong>Satellites:</strong> Feeder clinics in Tier-2 cities.</li>
+                        <li>💼 <strong>Corporate:</strong> Fertility benefits tie-ups.</li>
+                        <li>✈️ <strong>Tourism:</strong> International patient packages.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#03045E] text-white py-8 text-center">
+        <p class="text-sm opacity-70">Generated via Canvas Infographics • Data based on provided Clinic Financial Model</p>
+    </footer>
+
+    <!-- Chart Logic -->
+    <script>
+        // Common Config
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#475569';
+        
+        // Helper for label wrapping
+        function formatLabel(str, maxwidth) {
+            var sections = [];
+            var words = str.split(" ");
+            var temp = "";
+            words.forEach(function(item, index) {
+                if (temp.length > 0) {
+                    var concat = temp + ' ' + item;
+                    if (concat.length > maxwidth) {
+                        sections.push(temp);
+                        temp = "";
+                    } else {
+                        if (index == (words.length - 1)) {
+                            sections.push(concat);
+                            return;
+                        } else {
+                            temp = concat;
+                            return;
+                        }
+                    }
+                }
+                if (index == (words.length - 1)) {
+                    sections.push(item);
+                    return;
+                }
+                if (item.length < maxwidth) {
+                    temp = item;
+                } else {
+                    sections.push(item);
+                }
+            });
+            return sections;
+        }
+
+        // Tooltip Callback for Multiline
+        const tooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // 1. Capex Chart (Doughnut)
+        new Chart(document.getElementById('capexChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Core Lab Equipment', 'Specialized Imaging', 'Infrastructure & Interiors', 'Cryo & Ancillary', 'Furniture & IT'],
+                datasets: [{
+                    data: [65, 45, 80, 20, 20], // High-end estimates
+                    backgroundColor: ['#00B4D8', '#0077B6', '#03045E', '#FF9F1C', '#2EC4B6'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12 } },
+                    tooltip: tooltipConfig,
+                    title: { display: true, text: 'Total Capex Distribution (~₹2.3 Cr Avg)' }
+                }
+            }
+        });
+
+        // 2. Opex Chart (Horizontal Bar)
+        new Chart(document.getElementById('opexChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Fixed Staff Salaries', 'Marketing & Ads', 'Real Estate Rental', 'Utilities & CAM', 'General Admin'],
+                datasets: [{
+                    label: 'Monthly Cost (₹ Lakhs)',
+                    data: [5.5, 4.0, 3.0, 1.0, 0.5],
+                    backgroundColor: '#00B4D8',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: tooltipConfig
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 3. Unit Economics (Stacked Bar)
+        new Chart(document.getElementById('unitEcoChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Per Cycle Economics'],
+                datasets: [
+                    {
+                        label: 'Net Profit',
+                        data: [0.54],
+                        backgroundColor: '#2EC4B6' // Green
+                    },
+                    {
+                        label: 'Incidental Costs',
+                        data: [0.88],
+                        backgroundColor: '#FF9F1C' // Orange
+                    },
+                    {
+                        label: 'Variable Input Cost',
+                        data: [1.55],
+                        backgroundColor: '#03045E' // Dark Blue
+                    },
+                    {
+                        label: 'Marketing/CAC',
+                        data: [0.35], // Approx part of expenses
+                        backgroundColor: '#00B4D8' 
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: 'Cost vs Profit Components (₹ Lakhs)' },
+                    tooltip: tooltipConfig
+                },
+                scales: {
+                    x: { stacked: true, grid: { display: false } },
+                    y: { stacked: true, title: { display: true, text: '₹ Lakhs' } }
+                }
+            }
+        });
+
+        // 4. Breakeven Chart (Line)
+        const cycles = Array.from({length: 60}, (_, i) => i + 1); // 1 to 60 cycles
+        const fixedCost = 15.5; // Lakhs
+        const revenuePerCycle = 3.15;
+        const variablePerCycle = 1.55 + 0.88; // Input + Incidental
+        const marginPerCycle = revenuePerCycle - variablePerCycle; // ~0.72 L contribution
+
+        const totalCostData = cycles.map(c => fixedCost + (c * variablePerCycle));
+        const totalRevData = cycles.map(c => c * revenuePerCycle);
+
+        new Chart(document.getElementById('breakevenChart'), {
+            type: 'line',
+            data: {
+                labels: cycles,
+                datasets: [
+                    {
+                        label: 'Total Revenue',
+                        data: totalRevData,
+                        borderColor: '#2EC4B6',
+                        backgroundColor: '#2EC4B6',
+                        borderWidth: 2,
+                        pointRadius: 0
+                    },
+                    {
+                        label: 'Total Cost',
+                        data: totalCostData,
+                        borderColor: '#FF9F1C',
+                        backgroundColor: '#FF9F1C',
+                        borderWidth: 2,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: 'Breakeven Point Analysis' },
+                    tooltip: {
+                         callbacks: {
+                            title: (items) => `Cycles: ${items[0].label}`,
+                            label: (item) => `₹${item.raw.toFixed(1)} Lakhs`
+                        }
+                    },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                xMin: 29,
+                                xMax: 29,
+                                borderColor: 'black',
+                                borderWidth: 1,
+                                borderDash: [5, 5],
+                                label: {
+                                    content: 'Breakeven (~30)',
+                                    enabled: true,
+                                    position: 'top'
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Cycles Per Month' }, grid: { display: false } },
+                    y: { title: { display: true, text: '₹ Lakhs' } }
+                }
+            }
+        });
+
+        // 5. Bundling Chart (Bar Comparison)
+        new Chart(document.getElementById('bundlingChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Standard Cycle', 'Bundled Cycle'],
+                datasets: [
+                    {
+                        label: 'Cost',
+                        data: [2.5, 2.53], // 2.5L base, +3k cost
+                        backgroundColor: '#94a3b8'
+                    },
+                    {
+                        label: 'Profit',
+                        data: [0.54, 0.91], // 54k base, +37k profit
+                        backgroundColor: '#2EC4B6'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: tooltipConfig
+                },
+                 scales: {
+                    y: { title: { display: true, text: '₹ Lakhs' } }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
