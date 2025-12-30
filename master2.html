@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVF Master Analysis & Payback Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-active {
+            border-bottom: 3px solid #0ea5e9;
+            color: #0ea5e9;
+            background-color: #f0f9ff;
+        }
+        .copy-toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #334155;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+        }
+        .copy-toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+        @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 0 auto;
+        }
+
+        input[type=range] {
+            accent-color: #0ea5e9;
+        }
+    </style>
+</head>
+<body class="text-slate-900 leading-relaxed">
+
+    <div id="toast" class="copy-toast font-bold">📋 Data copied to clipboard!</div>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+                <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">IVF Clinic <span class="text-sky-500">Master Suite</span></h1>
+                <p class="text-slate-500 mt-2 text-lg">Financial benchmarks and interactive payback modeling.</p>
+            </div>
+            <div class="bg-white border-2 border-sky-500/20 rounded-2xl p-4 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-2xl">📈</div>
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">OpEx Threshold</p>
+                    <p class="text-xl font-extrabold text-sky-600" id="header-breakeven">~28.2 Cycles</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="bg-white rounded-t-3xl shadow-sm border-b overflow-hidden flex flex-wrap">
+            <button onclick="showTab('market')" id="btn-market" class="tab-btn px-6 py-4 font-bold text-xs transition-all tab-active uppercase">🌐 Market</button>
+            <button onclick="showTab('capex')" id="btn-capex" class="tab-btn px-6 py-4 font-bold text-xs transition-all text-slate-500 hover:bg-slate-50 uppercase">🏗️ CapEx</button>
+            <button onclick="showTab('opex')" id="btn-opex" class="tab-btn px-6 py-4 font-bold text-xs transition-all text-slate-500 hover:bg-slate-50 uppercase">⚙️ OpEx</button>
+            <button onclick="showTab('economics')" id="btn-economics" class="tab-btn px-6 py-4 font-bold text-xs transition-all text-slate-500 hover:bg-slate-50 uppercase">💰 Unit Eco</button>
+            <button onclick="showTab('payback')" id="btn-payback" class="tab-btn px-6 py-4 font-bold text-xs transition-all text-slate-500 hover:bg-slate-50 uppercase">📊 Payback SIM</button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="bg-white p-6 md:p-8 rounded-b-3xl shadow-xl min-h-[600px]">
+            
+            <!-- Tab Header Actions -->
+            <div class="flex justify-between items-center mb-8" id="actions-header">
+                <div id="tab-info">
+                    <h2 class="text-2xl font-extrabold text-slate-800" id="current-title">Market Benchmarks</h2>
+                    <p class="text-slate-500 text-sm mt-1" id="current-desc">National and regional IVF industry statistics.</p>
+                </div>
+                <button id="copy-btn" onclick="copyCurrentTable()" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl transition-all font-bold shadow-lg active:scale-95 text-sm">
+                    <span>📋</span> Copy for Sheets
+                </button>
+            </div>
+
+            <!-- Table Views -->
+            <div id="table-container">
+                <table id="table-market" class="data-table w-full text-left">
+                    <thead><tr class="bg-slate-50"><th class="p-4 border-b font-extrabold text-slate-500 text-xs">Indicator</th><th class="p-4 border-b font-extrabold text-slate-500 text-xs">Value</th><th class="p-4 border-b font-extrabold text-slate-500 text-xs">Note</th></tr></thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr><td class="p-4 font-bold">Annual IVF Cycles (India)</td><td class="p-4 font-black text-sky-600">300,000</td><td class="p-4 text-slate-500 italic">Growing at 16% CAGR</td></tr>
+                        <tr><td class="p-4 font-bold">Addressable Infertility</td><td class="p-4 font-black text-sky-600">28 Million</td><td class="p-4 text-slate-500 italic">Couples needing care</td></tr>
+                        <tr><td class="p-4 font-bold">Market Value 2030</td><td class="p-4 font-black text-sky-600">₹14,000 Cr</td><td class="p-4 text-slate-500 italic">Estimated projection</td></tr>
+                    </tbody>
+                </table>
+
+                <table id="table-capex" class="data-table w-full text-left hidden">
+                    <thead><tr class="bg-slate-50"><th class="p-4 border-b font-extrabold text-slate-500 text-xs">Component</th><th class="p-4 border-b font-extrabold text-slate-500 text-xs text-right">Low (₹)</th><th class="p-4 border-b font-extrabold text-slate-500 text-xs text-right">High (₹)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr><td class="p-4 font-bold">Core Lab (ICSI/Incubators)</td><td class="p-4 text-right">5,000,000</td><td class="p-4 text-right">6,500,000</td></tr>
+                        <tr><td class="p-4 font-bold">Imaging (Voluson)</td><td class="p-4 text-right">3,000,000</td><td class="p-4 text-right">4,500,000</td></tr>
+                        <tr><td class="p-4 font-bold">Sterile Infrastructure</td><td class="p-4 text-right">6,000,000</td><td class="p-4 text-right">8,000,000</td></tr>
+                        <tr class="bg-sky-50 font-black text-sky-900"><td class="p-4">TOTAL ESTIMATE</td><td class="p-4 text-right">₹1.8 Cr</td><td class="p-4 text-right">₹2.5 Cr</td></tr>
+                    </tbody>
+                </table>
+
+                <table id="table-opex" class="data-table w-full text-left hidden">
+                    <thead><tr class="bg-slate-50"><th class="p-4 border-b font-extrabold text-slate-500 text-xs">Fixed Expense</th><th class="p-4 border-b font-extrabold text-slate-500 text-xs text-right">Cost (₹ L)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr><td class="p-4 font-bold">Staff Salaries</td><td class="p-4 text-right font-black text-sky-600">5.50</td></tr>
+                        <tr><td class="p-4 font-bold">Marketing Spend</td><td class="p-4 text-right font-black text-sky-600">4.00</td></tr>
+                        <tr><td class="p-4 font-bold">Rental (2500 sq ft)</td><td class="p-4 text-right font-black text-sky-600">3.00</td></tr>
+                        <tr class="bg-slate-50 font-black text-slate-900"><td class="p-4">TOTAL MONTHLY FIX</td><td class="p-4 text-right">₹15.50 L</td></tr>
+                    </tbody>
+                </table>
+
+                <table id="table-economics" class="data-table w-full text-left hidden">
+                    <thead><tr class="bg-slate-50"><th class="p-4 border-b font-extrabold text-slate-500 text-xs">Component</th><th class="p-4 border-b font-extrabold text-slate-500 text-xs text-right">Inflow (₹)</th><th class="p-4 border-b font-extrabold text-slate-500 text-xs text-right">Variable Cost (₹)</th></tr></thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr><td class="p-4 font-bold">Premium IVF Cycle</td><td class="p-4 text-right font-black text-emerald-600">315,000</td><td class="p-4 text-right font-black text-red-500">231,000</td></tr>
+                        <tr class="bg-emerald-50 text-xs italic"><td colspan="3" class="p-4">*Calculated Net: ₹84,000 before OpEx allocation. Adjust sliders in SIM tab for scenarios.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Payback Simulator View -->
+            <div id="view-payback" class="hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Controls (4 Columns) -->
+                    <div class="lg:col-span-4 space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200">
+                            <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.15em] mb-6">Variable Inputs</h3>
+                            
+                            <!-- Slider 1: Cycles -->
+                            <div class="mb-6">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xs font-bold text-slate-600">Monthly Cycles</span>
+                                    <span class="text-sm font-black text-sky-600" id="cycle-val">45</span>
+                                </div>
+                                <input type="range" id="cycle-slider" min="0" max="100" value="45" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+
+                            <!-- Slider 2: Revenue -->
+                            <div class="mb-6">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xs font-bold text-slate-600">Revenue / Cycle (₹)</span>
+                                    <span class="text-sm font-black text-sky-600" id="rev-val">3,15,000</span>
+                                </div>
+                                <input type="range" id="rev-slider" min="150000" max="500000" step="5000" value="315000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+
+                            <!-- Slider 3: Variable Cost -->
+                            <div class="mb-6">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xs font-bold text-slate-600">Var. Cost / Cycle (₹)</span>
+                                    <span class="text-sm font-black text-red-500" id="cost-val">2,31,000</span>
+                                </div>
+                                <input type="range" id="cost-slider" min="100000" max="350000" step="5000" value="231000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+
+                            <div class="mt-6 pt-6 border-t border-slate-200">
+                                <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                                    <span class="text-xs font-bold text-slate-500">Net Profit / Cycle:</span>
+                                    <span class="text-lg font-black text-emerald-600" id="net-per-cycle">₹84,000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Summary Outputs -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-sky-900 text-white p-5 rounded-3xl">
+                                <p class="text-[10px] font-bold opacity-60 uppercase">Monthly Surplus</p>
+                                <p class="text-xl font-black mt-1" id="surplus-val">₹22.3L</p>
+                            </div>
+                            <div class="bg-slate-100 p-5 rounded-3xl">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">Payback Timeline</p>
+                                <p class="text-xl font-black text-slate-800 mt-1" id="payback-status">10 Mo</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Graph (8 Columns) -->
+                    <div class="lg:col-span-8">
+                        <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
+                            <div class="chart-container">
+                                <canvas id="paybackChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex gap-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 px-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 bg-sky-500 rounded-full"></div> Cumulative Cash Flow
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 bg-slate-200 rounded-full"></div> Breakeven Line (₹0)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="mt-10 text-center text-slate-400 text-xs pb-10">
+            <p>© 2025 IVF Strategic Simulator • Mid-Point CapEx: ₹2.15 Cr • Monthly Fixed OpEx: ₹15.5L</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentTab = 'market';
+        let paybackChartInstance = null;
+
+        const tabConfig = {
+            market: { title: 'Market Benchmarks', desc: 'Industry stats for business planning.', showCopy: true },
+            capex: { title: 'Clinic Startup CapEx', desc: 'Breakdown of the ₹1.8 Cr - ₹2.5 Cr investment.', showCopy: true },
+            opex: { title: 'Monthly Fixed OpEx', desc: 'Base burn rate including rent and staff.', showCopy: true },
+            economics: { title: 'Unit Economics', desc: 'Standard procedure cost vs. revenue.', showCopy: true },
+            payback: { title: 'Dynamic ROI Simulator', desc: 'Real-time payback modeling with 3-variable control.', showCopy: false }
+        };
+
+        function showTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
+            document.getElementById('btn-' + tabId).classList.add('tab-active');
+
+            const tables = ['market', 'capex', 'opex', 'economics'];
+            tables.forEach(t => document.getElementById('table-' + t).classList.add('hidden'));
+            document.getElementById('view-payback').classList.add('hidden');
+
+            if (tabId === 'payback') {
+                document.getElementById('view-payback').classList.remove('hidden');
+                initPaybackChart();
+            } else {
+                document.getElementById('table-' + tabId).classList.remove('hidden');
+            }
+
+            document.getElementById('current-title').innerText = tabConfig[tabId].title;
+            document.getElementById('current-desc').innerText = tabConfig[tabId].desc;
+            document.getElementById('copy-btn').style.display = tabConfig[tabId].showCopy ? 'flex' : 'none';
+        }
+
+        function initPaybackChart() {
+            if (paybackChartInstance) return;
+            const ctx = document.getElementById('paybackChart').getContext('2d');
+            paybackChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 49}, (_, i) => i),
+                    datasets: [
+                        {
+                            label: 'Cumulative P&L (₹ Lakhs)',
+                            data: [],
+                            borderColor: '#0ea5e9',
+                            backgroundColor: 'rgba(14, 165, 233, 0.08)',
+                            fill: true,
+                            tension: 0.3,
+                            borderWidth: 4,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Breakeven',
+                            data: Array(49).fill(0),
+                            borderColor: '#e2e8f0',
+                            borderDash: [5, 5],
+                            borderWidth: 1,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            title: { display: true, text: '₹ Lakhs', font: { weight: 'bold' } },
+                            grid: { color: 'rgba(0,0,0,0.03)' }
+                        },
+                        x: { 
+                            title: { display: true, text: 'Month Index', font: { weight: 'bold' } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+            updateSimulation();
+        }
+
+        // Sliders
+        const cS = document.getElementById('cycle-slider');
+        const rS = document.getElementById('rev-slider');
+        const vS = document.getElementById('cost-slider');
+
+        [cS, rS, vS].forEach(s => s.addEventListener('input', updateSimulation));
+
+        function updateSimulation() {
+            const cycles = parseInt(cS.value);
+            const revenue = parseInt(rS.value);
+            const varCost = parseInt(vS.value);
+            
+            const netPerCycle = revenue - varCost;
+            const fixedOpEx = 1550000;
+            const initialCapex = -21500000; // 2.15 Cr Midpoint
+
+            const monthlySurplus = (cycles * netPerCycle) - fixedOpEx;
+            
+            // Update UI Labels
+            document.getElementById('cycle-val').innerText = cycles;
+            document.getElementById('rev-val').innerText = revenue.toLocaleString();
+            document.getElementById('cost-val').innerText = varCost.toLocaleString();
+            document.getElementById('net-per-cycle').innerText = '₹' + netPerCycle.toLocaleString();
+            document.getElementById('surplus-val').innerText = '₹' + (monthlySurplus / 100000).toFixed(1) + 'L';
+            
+            // Header Breakeven Tooltip
+            if (netPerCycle > 0) {
+                const beCycles = (fixedOpEx / netPerCycle).toFixed(1);
+                document.getElementById('header-breakeven').innerText = `~${beCycles} Cycles`;
+            } else {
+                document.getElementById('header-breakeven').innerText = "Infeasible";
+            }
+
+            // Payback Status
+            const statusEl = document.getElementById('payback-status');
+            if (monthlySurplus <= 0) {
+                statusEl.innerText = "Never (Loss)";
+                statusEl.className = "text-xl font-black text-red-500 mt-1";
+            } else {
+                const months = Math.ceil(Math.abs(initialCapex) / monthlySurplus);
+                statusEl.innerText = months + " Months";
+                statusEl.className = "text-xl font-black text-slate-800 mt-1";
+            }
+
+            // Update Chart Data (48 Months view)
+            const dataPoints = [];
+            for (let m = 0; m <= 48; m++) {
+                dataPoints.push((initialCapex + (m * monthlySurplus)) / 100000);
+            }
+            paybackChartInstance.data.datasets[0].data = dataPoints;
+            paybackChartInstance.update('none');
+        }
+
+        // Copy Table Logic
+        function copyCurrentTable() {
+            const table = document.getElementById('table-' + currentTab);
+            let csv = [];
+            const rows = table.querySelectorAll('tr');
+            for (let i = 0; i < rows.length; i++) {
+                const row = [], cols = rows[i].querySelectorAll('td, th');
+                for (let j = 0; j < cols.length; j++) {
+                    let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/"/g, '""');
+                    row.push('"' + data + '"');
+                }
+                csv.push(row.join(','));
+            }
+            const textArea = document.createElement("textarea");
+            textArea.value = csv.join('\n');
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            const toast = document.getElementById("toast");
+            toast.className = "copy-toast show";
+            setTimeout(() => { toast.className = "copy-toast"; }, 2500);
+        }
+
+        window.onload = () => showTab('market');
+    </script>
+</body>
+</html>
